@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Temperature Hot</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            background: url(images/bg-image.jpg) no-repeat;
+            background-size: cover;
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <form class="col-md-6 m-auto py-5">
+            <div class="input-group mb-3">
+                <input id = "location" type="text" class="form-control" placeholder="Enter a location for Weather ...">
+                <div class="input-group-append">
+                    <button id ="search" type="button" class="btn btn-danger">Search</button>
+                </div>
+            </div>
+        </form>
+        <div class="weather-status text-white text-center">
+            <img src="https://openweathermap.org/img/wn/02d@2x.png" alt="">
+            <h1 id="city-name">Search City Name</h1>
+            <h1 id="country"></h1>
+            <h1 id="temperature" class="deg"></h1>
+            <h2 class="py-2" id="feelsLike-temp"></h2>
+            <h2 class="py-2" id="weather-description"></h2>
+            <h2 class="py-2" id="humidity"></h2>
+            <h2 class="py-2" id="wind-speed"></h2>
+
+        </div>
+    </div>
+
+    <script>
+            // search button for on click
+            function weatherData(city)
+            {
+            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=d92fcc63f20dc913555e5b23957f44a1&units=metric`)
+            .then(res => res.json())
+            .then(json => showWeatherData(json));
+            }
+            
+            
+            function showWeatherData(data){
+                  // take data from data
+                   const description = data.weather[0].description;
+                   const cityName = data.name;
+                   const icon = data.weather[0].icon;
+                   let temp = data.main.temp;
+                   const country = data.sys.country;
+                   // insert collected data id wise in HTML
+                   document.getElementById('city-name').innerText = cityName;
+                   document.getElementById('temperature').innerText = `${temp} \xB0C`;
+                   document.getElementById('country').innerText = country;
+
+                // try shortcut way
+                   document.getElementById("feelsLike-temp").innerText = `Feels Like ${data.main.feels_like} \xB0C`;
+                   document.getElementById("weather-description").innerText = data.weather[0].description;
+                   document.getElementById("humidity").innerText = `Humidity ${data.main.humidity} %`;
+                   document.getElementById("wind-speed").innerText = `Wind Speed ${data.wind.speed} km/h`;
+               
+                }
+            
+      
+                weatherData('dhaka');
+                document.getElementById('search').addEventListener('click',function(){
+                 const location = document.getElementById('location').value;    // input field theke neyar shomoy value use kora hoy
+                 weatherData(location);                    
+
+                });
+
+    </script>
+ 
+</body>
+
+</html>
+
